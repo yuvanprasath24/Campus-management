@@ -1,59 +1,85 @@
-window.onload = function () {
-  const links = document.querySelectorAll(".sidebar a");
-  const sections = document.querySelectorAll(".main-content section");
-
-  // Show only the first section
-  sections.forEach((section, index) => {
-    section.classList.toggle("active", index === 0);
+// Password toggle with icon
+document.querySelectorAll(".show-password").forEach(button => {
+  button.addEventListener("click", () => {
+    const input = button.previousElementSibling;
+    const icon = button.querySelector("i");
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
   });
+});
 
-  // Sidebar navigation click
-  links.forEach(link => {
-    const href = link.getAttribute("href");
-    if (href === "#") return; // skip logout link
-    link.addEventListener("click", function (e) {
-      e.preventDefault();
-      const targetId = this.getAttribute("href").substring(1);
-      sections.forEach(section => {
-        section.classList.toggle("active", section.id === targetId);
-      });
-    });
-  });
+// Move complaint to 'On Process'
+document.addEventListener("click", function (e) {
+  if (e.target.closest(".btn-process")) {
+    const row = e.target.closest("tr");
+    const statusCell = row.querySelector("td:nth-child(5)");
+    statusCell.innerHTML = `<span class="status-badge status-processing">Processing</span>`;
 
-  // Handle logout immediately
-  document.getElementById("logoutLink").addEventListener("click", function (e) {
+    const actionCell = row.querySelector(".action-buttons") || row.querySelector("td:last-child");
+    actionCell.innerHTML = `
+      <button class="btn btn-action btn-complete">
+        <i class="fas fa-check"></i> Complete
+      </button>
+    `;
+
+    document.getElementById("process-complaints").appendChild(row);
+    showSection("#onProcess");
+  }
+
+  // Move complaint to 'Completed'
+  if (e.target.closest(".btn-complete")) {
+    const row = e.target.closest("tr");
+    const statusCell = row.querySelector("td:nth-child(5)") || row.querySelector("td:nth-child(4)");
+    statusCell.innerHTML = `<span class="status-badge status-completed">Completed</span>`;
+
+    const actionCell = row.querySelector("td:last-child");
+    if (actionCell) actionCell.remove();
+
+    document.getElementById("completed-complaints").appendChild(row);
+    showSection("#completed");
+  }
+
+  // Logout
+  if (e.target.closest("#logoutLink")) {
     e.preventDefault();
-    window.location.href = "/index.html"; // adjust path if needed
+    // if (confirm("Are you sure you want to log out?")) {
+      // alert("Logged out!");
+      window.location.href = "/index.html"; // Redirect to login page
+    // }
+  }
+});
+
+// Student Register Form
+document.getElementById("registerForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const name = document.getElementById("studentName").value;
+  const id = document.getElementById("studentId").value;
+  const email = document.getElementById("studentEmail").value;
+  alert(`Student ${name} (${id}) registered with email ${email}`);
+  this.reset();
+});
+
+// Section toggling
+function showSection(id) {
+  document.querySelectorAll("section").forEach(section => {
+    section.style.display = "none";
   });
+  const target = document.querySelector(id);
+  if (target) target.style.display = "block";
+}
 
-  // Sample content
-  document.getElementById("complain").innerHTML += `
-    <table border="1" cellpadding="10" cellspacing="0">
-      <tr>
-        <th>ID</th>
-        <th>User</th>
-        <th>Subject</th>
-        <th>Status</th>
-      </tr>
-      <tr>
-        <td>COMP-001</td>
-        <td>John Doe</td>
-        <td>Payment not processed</td>
-        <td>Pending</td>
-      </tr>
-      <tr>
-        <td>COMP-002</td>
-        <td>Jane Smith</td>
-        <td>Account access issue</td>
-        <td>Pending</td>
-      </tr>
-    </table>
-  `;
+// Show default section
+window.addEventListener("DOMContentLoaded", () => {
+  showSection("#complain");
+});
 
-  document.getElementById("checked").innerHTML += `
-    <ul>
-      <li><strong>COMP-003</strong> – Resolved: Incorrect bill generated</li>
-      <li><strong>COMP-004</strong> – Resolved: Profile update issue</li>
-    </ul>
-  `;
-};
+// Sidebar navigation
+document.querySelectorAll(".sidebar a[href^='#']").forEach(link => {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+    const targetId = this.getAttribute("href");
+    showSection(targetId);
+  });
+});
