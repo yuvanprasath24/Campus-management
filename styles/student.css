@@ -1,100 +1,40 @@
-/* Dashboard Box */
-.dashboard-box {
-  background: linear-gradient(145deg, #ffffff, #f0f4f8);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 1rem;
-  padding: 2rem;
+/* Sidebar navigation buttons */
+.nav-btn {
+  display: block;
   width: 100%;
-  max-width: 28rem;
-  text-align: center;
-  animation: fadeInUp 0.6s ease;
-  transition: transform 0.3s;
-}
-.dashboard-box:hover {
-  transform: translateY(-4px);
-}
-
-/* Title */
-.title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #4f46e5; /* Indigo-600 */
-  margin-bottom: 1.2rem;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-}
-
-/* Button Group */
-.button-group {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* Base Button */
-.btn {
-  width: 100%;
-  color: white;
+  text-align: left;
   padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  border: none;
+  border-radius: 0.5rem;
+  background-color: #4f46e5;
+  transition: background 0.3s ease;
+}
+.nav-btn:hover {
+  background-color: #4338ca;
+}
+.active-nav {
+  background-color: #3730a3 !important;
+}
+
+/* Reusable button style */
+.btn-indigo {
+  background: linear-gradient(to right, #6366f1, #4338ca);
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
 }
-
-/* Color Variants */
-.btn-blue {
-  background: linear-gradient(to right, #3b82f6, #2563eb);
-}
-.btn-blue:hover {
-  background: linear-gradient(to right, #2563eb, #1d4ed8);
+.btn-indigo:hover {
+  background: linear-gradient(to right, #4338ca, #3730a3);
   transform: scale(1.03);
 }
-
-.btn-lightblue {
-  background: linear-gradient(to right, #93c5fd, #60a5fa);
-}
-.btn-lightblue:hover {
-  background: linear-gradient(to right, #60a5fa, #3b82f6);
-  transform: scale(1.03);
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.btn-red {
-  background: linear-gradient(to right, #f87171, #ef4444);
-}
-.btn-red:hover {
-  background: linear-gradient(to right, #ef4444, #dc2626);
-  transform: scale(1.03);
-}
-
-/* Animation */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .dashboard-box {
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-  }
-
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .btn {
-    font-size: 0.95rem;
-    padding: 0.6rem 0.8rem;
-  }
+button:hover {
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
 }

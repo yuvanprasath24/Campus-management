@@ -1,53 +1,52 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const submitBtn = document.getElementById('submitComplaintBtn');
-  const viewBtn = document.getElementById('viewComplaintsBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const complaintForm = document.getElementById('complaintForm');
-  const complaintText = document.getElementById('complaintText');
-  const sendBtn = document.getElementById('sendComplaint');
-  const complaintList = document.getElementById('complaintList');
-  const complaintsUl = document.getElementById('complaints');
+let complaints = [];
 
-  let complaints = [];
+function showSection(sectionId) {
+  document.getElementById('submitSection').classList.add('hidden');
+  document.getElementById('viewSection').classList.add('hidden');
+  document.getElementById(sectionId).classList.remove('hidden');
+}
 
-  submitBtn.addEventListener('click', () => {
-    complaintForm.classList.remove('hidden');
-    complaintList.classList.add('hidden');
-  });
+function submitComplaint(e) {
+  e.preventDefault();
+  const type = document.getElementById('type').value;
+  const subject = document.getElementById('subject').value;
+  const description = document.getElementById('description').value;
 
-  viewBtn.addEventListener('click', () => {
-    complaintList.classList.remove('hidden');
-    complaintForm.classList.add('hidden');
-    renderComplaints();
-  });
+  const newComplaint = {
+    type,
+    subject,
+    description,
+    status: 'Pending'
+  };
 
-  sendBtn.addEventListener('click', () => {
-    const text = complaintText.value.trim();
-    if (text) {
-      complaints.push(text);
-      complaintText.value = '';
-      alert('Complaint submitted!');
-    }
-  });
+  complaints.push(newComplaint);
+  e.target.reset();
+  alert('Complaint submitted successfully!');
+  renderComplaints();
+  showSection('viewSection');
+}
 
-  logoutBtn.addEventListener('click', () => {
-    window.location.href = 'index.html';
-  });
+function renderComplaints() {
+  const tableBody = document.getElementById('complaintsTableBody');
+  tableBody.innerHTML = '';
 
-  function renderComplaints() {
-    complaintsUl.innerHTML = '';
-    if (complaints.length === 0) {
-      complaintsUl.innerHTML = '<li>No complaints submitted yet.</li>';
-    } else {
-      complaints.forEach((c, index) => {
-        const li = document.createElement('li');
-        li.textContent = `#${index + 1}: ${c}`;
-        complaintsUl.appendChild(li);
-      });
-    }
+  if (complaints.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="5" class="px-4 py-2 text-gray-500">No complaints submitted yet.</td></tr>`;
+    return;
   }
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-  window.location.href = "/index.html"; // adjust path if needed
-});
 
-});
+  complaints.forEach((c, i) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="px-4 py-2 border">${i + 1}</td>
+      <td class="px-4 py-2 border">${c.type}</td>
+      <td class="px-4 py-2 border font-semibold">${c.subject}</td>
+      <td class="px-4 py-2 border">${c.description}</td>
+      <td class="px-4 py-2 border">${c.status}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+function logout() {
+  window.location.href = "/index.html"; // Replace with your actual login/home page if different
+}
