@@ -74,3 +74,38 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => errorMessage.classList.remove('show'), 3000);
   }
 });
+
+function submitForm() {
+  const Email = document.getElementById('email').value;
+  const UserId = document.getElementById('userId').value;
+  const Password = document.getElementById('password').value;
+   const userData = {
+    email: Email ,
+    userId: UserId,
+    password: Password
+  };
+  console.log(userData);
+  fetch('/api/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(userData)
+  })
+  .then(response =>response.json())
+  .then(data =>{
+    if(data.response === 1){
+      console.log('Login successful');
+    }
+    else{
+      console.log('Login failed');
+      alert('Login failed. Please check your credentials.');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showError('An error occurred while logging in');
+  });
+}
+  
+
