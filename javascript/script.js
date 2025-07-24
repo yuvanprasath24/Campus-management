@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const studentLoginBtn = document.getElementById('studentLoginBtn');
   const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const parentLoginBtn = document.getElementById('parentLoginBtn');
   const submitLogin = document.getElementById('submitLogin');
   const backBtn = document.getElementById('backBtn');
   const errorMessage = document.getElementById('errorMessage');
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loginHeading.textContent = 'Student Login';
     userIdField.placeholder = 'Student ID';
     userIdField.classList.remove('hidden');
-    showLogin('bg-blue-500', 'hover:bg-blue-600');
+    showLogin('bg-blue-600', 'hover:bg-blue-700');
   });
 
   adminLoginBtn.addEventListener('click', () => {
@@ -30,7 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
     loginHeading.textContent = 'Admin Login';
     userIdField.placeholder = 'Admin ID';
     userIdField.classList.remove('hidden');
-    showLogin('bg-green-500', 'hover:bg-green-600');
+    showLogin('bg-green-600', 'hover:bg-green-700');
+  });
+
+  parentLoginBtn.addEventListener('click', () => {
+    currentUserType = 'parent';
+    loginHeading.textContent = 'Parent Login';
+    userIdField.placeholder = 'Student ID';
+    userIdField.classList.remove('hidden');
+    showLogin('bg-purple-600', 'hover:bg-purple-700');
   });
 
   backBtn.addEventListener('click', () => {
@@ -52,11 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (currentUserType === 'student' && validStudentEmails.includes(email) && password === testPassword) {
-      // ✅ Redirect to student dashboard
       window.location.href = "/studentDashBoard/student.html";
     } else if (currentUserType === 'admin' && validAdminEmails.includes(email) && password === testPassword) {
-      // ✅ Redirect to admin dashboard
       window.location.href = "/adminDashBoard/admin.html";
+    } else if (currentUserType === 'parent' && validStudentEmails.includes(email) && password === testPassword) {
+      window.location.href = "/parentsDashBoard/parents.html";
     } else {
       showError('Invalid credentials');
     }
@@ -65,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showLogin(bgClass, hoverClass) {
     selectionScreen.classList.add('hidden');
     loginForm.classList.remove('hidden');
-    submitLogin.className = `w-full text-white px-4 py-2 rounded ${bgClass} ${hoverClass}`;
+    submitLogin.className = `w-full text-white px-4 py-2 rounded-xl shadow ${bgClass} ${hoverClass}`;
   }
 
   function showError(message) {
@@ -74,38 +83,3 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => errorMessage.classList.remove('show'), 3000);
   }
 });
-
-function submitForm() {
-  const Email = document.getElementById('email').value;
-  const UserId = document.getElementById('userId').value;
-  const Password = document.getElementById('password').value;
-   const userData = {
-    email: Email ,
-    userId: UserId,
-    password: Password
-  };
-  console.log(userData);
-  fetch('/api/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(userData)
-  })
-  .then(response =>response.json())
-  .then(data =>{
-    if(data.response === 1){
-      console.log('Login successful');
-    }
-    else{
-      console.log('Login failed');
-      alert('Login failed. Please check your credentials.');
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    showError('An error occurred while logging in');
-  });
-}
-  
-

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parent Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .custom-sidebar {
+      background-color: #2c3e50 !important;
+    }
+    .complaint-img {
+      width: 300px;
+      height: auto;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="flex min-h-screen bg-gray-100">
+
+  <!-- Sidebar -->
+  <aside class="w-64 custom-sidebar text-white flex flex-col p-6">
+    <h1 class="text-2xl font-bold mb-8">Parent Panel</h1>
+    <button onclick="showSection('complaintsSection')" class="mb-4 py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded">View Complaints</button>
+    <button onclick="logout()" class="py-2 px-4 bg-red-600 hover:bg-red-500 rounded">Logout</button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-10">
+    <section id="complaintsSection">
+      <h2 class="text-3xl font-semibold mb-6 text-gray-800">Student Complaints</h2>
+      <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="min-w-full table-auto border-collapse">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="px-4 py-3">#</th>
+              <th class="px-4 py-3">Student ID</th>
+              <th class="px-4 py-3">Type</th>
+              <th class="px-4 py-3">Subject</th>
+              <th class="px-4 py-3">Block No</th>
+              <th class="px-4 py-3">Room No</th>
+              <th class="px-4 py-3">Description + Image</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody id="complaintsBody" class="text-gray-700">
+            <!-- Data injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/javascript/parents.js"></script>
+</body>
+</html>
