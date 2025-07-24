@@ -6,7 +6,8 @@ function showSection(sectionId) {
   document.getElementById(sectionId).classList.remove('hidden');
 }
 
-function submitComplaint(e) {
+//registers complaints
+async function submitComplaint(e) {
   e.preventDefault();
 
   const studentId = document.getElementById('studentid').value;
@@ -18,33 +19,37 @@ function submitComplaint(e) {
   const imageInput = document.getElementById('image');
   const imageFile = imageInput.files[0];
 
-  const reader = new FileReader();
-  reader.onload = function () {
-    const imageData = imageFile ? reader.result : "";
-
-    const complaint = {
-      studentId,
-      type,
-      subject,
-      blockNo,
-      roomNo,
-      description,
-      image: imageData,
-      status: "Pending"
-    };
-
-    complaints.push(complaint);
-    updateComplaintsTable();
-    document.querySelector('.complaint-form').reset();
-    alert("Complaint submitted successfully!");
-  };
-
+  const formData = new FormData();
+  formData.append("complaintType", type);
+  formData.append("studentId", studentId);
+  formData.append("complaintSubject", subject);
+  formData.append("complaintDescription", description);
+  formData.append("complaintStatus", "Pending"); // Default status
+  formData.append("complaintRoomNumber", roomNo);
+  formData.append("complaintBlockNUmber", blockNo);
   if (imageFile) {
-    reader.readAsDataURL(imageFile);
-  } else {
-    reader.onload(); // trigger manually if no image
+    formData.append("image", imageFile);
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/student/registerComplaint", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Complaint registration failed");
+    }
+
+    const result = await response.text();
+    alert(result);
+    document.querySelector('.complaint-form').reset();
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong while submitting the complaint.");
   }
 }
+
 
 function updateComplaintsTable() {
   const tbody = document.getElementById('complaintsTableBody');
