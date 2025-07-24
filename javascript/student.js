@@ -8,14 +8,18 @@ function showSection(sectionId) {
 
 function submitComplaint(e) {
   e.preventDefault();
+
   const type = document.getElementById('type').value;
   const subject = document.getElementById('subject').value;
   const description = document.getElementById('description').value;
+  const imageInput = document.getElementById('image');
+  const imageURL = imageInput.files[0] ? URL.createObjectURL(imageInput.files[0]) : null;
 
   const newComplaint = {
     type,
     subject,
     description,
+    image: imageURL,
     status: 'Pending'
   };
 
@@ -38,15 +42,24 @@ function renderComplaints() {
   complaints.forEach((c, i) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td class="px-4 py-2 border">${i + 1}</td>
-      <td class="px-4 py-2 border">${c.type}</td>
-      <td class="px-4 py-2 border font-semibold">${c.subject}</td>
-      <td class="px-4 py-2 border">${c.description}</td>
-      <td class="px-4 py-2 border">${c.status}</td>
+      <td>${i + 1}</td>
+      <td>${c.type}</td>
+      <td>${c.subject}</td>
+      <td>
+        <p>${c.description}</p>
+        ${c.image ? `<img src="${c.image}" class="desc-img" onclick="showFullImage('${c.image}')">` : ''}
+      </td>
+      <td>${c.status}</td>
     `;
     tableBody.appendChild(row);
   });
 }
+
 function logout() {
-  window.location.href = "/index.html"; // Replace with your actual login/home page if different
+  window.location.href = "/index.html";
+}
+
+function showFullImage(src) {
+  const imgWindow = window.open("");
+  imgWindow.document.write(`<img src="${src}" style="width:90%;margin:20px auto;display:block;">`);
 }
