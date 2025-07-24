@@ -1,67 +1,103 @@
-// Password toggle with icon
-document.querySelectorAll(".show-password").forEach(button => {
-  button.addEventListener("click", () => {
-    const input = button.previousElementSibling;
-    const icon = button.querySelector("i");
-    const isPassword = input.type === "password";
-    input.type = isPassword ? "text" : "password";
-    icon.classList.toggle("fa-eye");
-    icon.classList.toggle("fa-eye-slash");
-  });
-});
+// Sample complaints data with Student ID
+let complaints = [
+  {
+    id: 1,
+    studentId: "S101",
+    type: "Wi-Fi / Internet Connectivity Problems",
+    subject: "Slow Internet",
+    block: "B-Block",
+    room: "204",
+    description: "Internet disconnects frequently.",
+    image: "https://via.placeholder.com/250x150",
+    status: "Pending"
+  },
+  {
+    id: 2,
+    studentId: "S102",
+    type: "Hostel Maintenance",
+    subject: "Broken Fan",
+    block: "A-Block",
+    room: "101",
+    description: "Ceiling fan not working.",
+    image: "https://via.placeholder.com/250x150",
+    status: "On Process"
+  },
+  {
+    id: 3,
+    studentId: "S103",
+    type: "Library",
+    subject: "Book Unavailable",
+    block: "C-Block",
+    room: "305",
+    description: "Requested book not available.",
+    image: "https://via.placeholder.com/250x150",
+    status: "Completed"
+  }
+];
 
-// Move complaint to 'On Process'
-document.addEventListener("click", function (e) {
-  if (e.target.closest(".btn-process")) {
-    const row = e.target.closest("tr");
-    const statusCell = row.querySelector("td:nth-child(5)");
-    statusCell.innerHTML = `<span class="status-badge status-processing">Processing</span>`;
+// Render complaints to respective sections
+function renderComplaints() {
+  const pending = document.getElementById("pending-complaints");
+  const process = document.getElementById("process-complaints");
+  const completed = document.getElementById("completed-complaints");
 
-    const actionCell = row.querySelector(".action-buttons") || row.querySelector("td:last-child");
-    actionCell.innerHTML = `
-      <button class="btn btn-action btn-complete">
-        <i class="fas fa-check"></i> Complete
-      </button>
+  pending.innerHTML = "";
+  process.innerHTML = "";
+  completed.innerHTML = "";
+
+  complaints.forEach((c, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${c.id}</td>
+      <td>${c.studentId}</td>
+      <td>${c.type}</td>
+      <td>${c.subject}</td>
+      <td>${c.block}</td>
+      <td>${c.room}</td>
+      <td>
+        ${c.description}<br/>
+        <img src="${c.image}" class="desc-img" alt="Complaint Image">
+      </td>
+      <td><span class="status-badge status-${c.status.toLowerCase().replace(" ", "-")}">${c.status}</span></td>
+      ${getActionButtons(index, c.status)}
     `;
 
-    document.getElementById("process-complaints").appendChild(row);
-    showSection("#onProcess");
+    if (c.status === "Pending") pending.appendChild(row);
+    else if (c.status === "On Process") process.appendChild(row);
+    else completed.appendChild(row);
+  });
+}
+
+// Return buttons based on status
+function getActionButtons(index, status) {
+  if (status === "Pending") {
+    return `<td class="action-buttons">
+      <button class="btn btn-action btn-process" onclick="markAsProcessing(${index})">On Process</button>
+      <button class="btn btn-action btn-complete" onclick="markAsCompleted(${index})">Completed</button>
+    </td>`;
+  } else if (status === "On Process") {
+    return `<td class="action-buttons">
+      <button class="btn btn-action btn-complete" onclick="markAsCompleted(${index})">Completed</button>
+    </td>`;
+  } else {
+    return `<td>-</td>`;
   }
+}
 
-  // Move complaint to 'Completed'
-  if (e.target.closest(".btn-complete")) {
-    const row = e.target.closest("tr");
-    const statusCell = row.querySelector("td:nth-child(5)") || row.querySelector("td:nth-child(4)");
-    statusCell.innerHTML = `<span class="status-badge status-completed">Completed</span>`;
+// Status change handlers
+function markAsProcessing(index) {
+  complaints[index].status = "On Process";
+  renderComplaints();
+  showSection("#onProcess");
+}
 
-    const actionCell = row.querySelector("td:last-child");
-    if (actionCell) actionCell.remove();
+function markAsCompleted(index) {
+  complaints[index].status = "Completed";
+  renderComplaints();
+  showSection("#completed");
+}
 
-    document.getElementById("completed-complaints").appendChild(row);
-    showSection("#completed");
-  }
-
-  // Logout
-  if (e.target.closest("#logoutLink")) {
-    e.preventDefault();
-    // if (confirm("Are you sure you want to log out?")) {
-      // alert("Logged out!");
-      window.location.href = "/index.html"; // Redirect to login page
-    // }
-  }
-});
-
-// Student Register Form
-document.getElementById("registerForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const name = document.getElementById("studentName").value;
-  const id = document.getElementById("studentId").value;
-  const email = document.getElementById("studentEmail").value;
-  alert(`Student ${name} (${id}) registered with email ${email}`);
-  this.reset();
-});
-
-// Section toggling
+// Show/hide sections
 function showSection(id) {
   document.querySelectorAll("section").forEach(section => {
     section.style.display = "none";
@@ -70,16 +106,43 @@ function showSection(id) {
   if (target) target.style.display = "block";
 }
 
-// Show default section
-window.addEventListener("DOMContentLoaded", () => {
-  showSection("#complain");
-});
-
-// Sidebar navigation
+// Sidebar nav link behavior
 document.querySelectorAll(".sidebar a[href^='#']").forEach(link => {
   link.addEventListener("click", function (e) {
     e.preventDefault();
     const targetId = this.getAttribute("href");
     showSection(targetId);
   });
+});
+
+// Password toggle
+document.querySelectorAll(".show-password").forEach(button => {
+  button.addEventListener("click", () => {
+    const input = button.previousElementSibling;
+    const icon = button.querySelector("i");
+    input.type = input.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+  });
+});
+
+// Register form
+document.getElementById("registerForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const id = document.getElementById("studentId").value;
+  const email = document.getElementById("studentEmail").value;
+  alert(`Student ${id} registered with email ${email}`);
+  this.reset();
+});
+
+// Logout
+document.getElementById("logoutLink").addEventListener("click", e => {
+  e.preventDefault();
+  window.location.href = "/index.html";
+});
+
+// On page load
+window.addEventListener("DOMContentLoaded", () => {
+  renderComplaints();
+  showSection("#complain");
 });

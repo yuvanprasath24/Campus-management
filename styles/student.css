@@ -116,10 +116,11 @@ body {
 }
 
 .desc-img {
-  width: 250px;
+  width: 400px; /* increased from 250px */
   height: auto;
   margin-top: 10px;
   border-radius: 6px;
   cursor: pointer;
   display: block;
 }
+

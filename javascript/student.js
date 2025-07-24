@@ -9,57 +9,68 @@ function showSection(sectionId) {
 function submitComplaint(e) {
   e.preventDefault();
 
+  const studentId = document.getElementById('studentid').value;
   const type = document.getElementById('type').value;
   const subject = document.getElementById('subject').value;
+  const blockNo = document.getElementById('blockNo').value;
+  const roomNo = document.getElementById('roomNo').value;
   const description = document.getElementById('description').value;
   const imageInput = document.getElementById('image');
-  const imageURL = imageInput.files[0] ? URL.createObjectURL(imageInput.files[0]) : null;
+  const imageFile = imageInput.files[0];
 
-  const newComplaint = {
-    type,
-    subject,
-    description,
-    image: imageURL,
-    status: 'Pending'
+  const reader = new FileReader();
+  reader.onload = function () {
+    const imageData = imageFile ? reader.result : "";
+
+    const complaint = {
+      studentId,
+      type,
+      subject,
+      blockNo,
+      roomNo,
+      description,
+      image: imageData,
+      status: "Pending"
+    };
+
+    complaints.push(complaint);
+    updateComplaintsTable();
+    document.querySelector('.complaint-form').reset();
+    alert("Complaint submitted successfully!");
   };
 
-  complaints.push(newComplaint);
-  e.target.reset();
-  alert('Complaint submitted successfully!');
-  renderComplaints();
-  showSection('viewSection');
+  if (imageFile) {
+    reader.readAsDataURL(imageFile);
+  } else {
+    reader.onload(); // trigger manually if no image
+  }
 }
 
-function renderComplaints() {
-  const tableBody = document.getElementById('complaintsTableBody');
-  tableBody.innerHTML = '';
+function updateComplaintsTable() {
+  const tbody = document.getElementById('complaintsTableBody');
+  tbody.innerHTML = "";
 
-  if (complaints.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="5" class="px-4 py-2 text-gray-500">No complaints submitted yet.</td></tr>`;
-    return;
-  }
+  complaints.forEach((c, index) => {
+    const row = document.createElement("tr");
 
-  complaints.forEach((c, i) => {
-    const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${i + 1}</td>
+      <td>${index + 1}</td>
+      <td>${c.studentId}</td>
       <td>${c.type}</td>
       <td>${c.subject}</td>
+      <td>${c.blockNo}</td>
+      <td>${c.roomNo}</td>
       <td>
         <p>${c.description}</p>
-        ${c.image ? `<img src="${c.image}" class="desc-img" onclick="showFullImage('${c.image}')">` : ''}
+         ${c.image ? `<img src="${c.image}" alt="Complaint Image" class="desc-img" />` : ""}
       </td>
       <td>${c.status}</td>
     `;
-    tableBody.appendChild(row);
+
+    tbody.appendChild(row);
   });
 }
 
 function logout() {
   window.location.href = "/index.html";
-}
-
-function showFullImage(src) {
-  const imgWindow = window.open("");
-  imgWindow.document.write(`<img src="${src}" style="width:90%;margin:20px auto;display:block;">`);
 }

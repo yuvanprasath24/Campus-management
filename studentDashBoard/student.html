@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -24,6 +24,7 @@
       <section id="submitSection">
         <h2 class="section-title">Submit Complaint</h2>
         <form onsubmit="submitComplaint(event)" class="complaint-form">
+          <input type="text" id="studentid" placeholder="Student ID" required class="form-input" />
           <select id="type" required class="form-input">
             <option value="" disabled selected>Select Complaint Type</option>
             <option>Hostel Maintenance Issues</option>
@@ -42,8 +43,6 @@
           <input type="text" id="blockNo" placeholder="Block NO" required class="form-input" />
           <input type="text" id="roomNo" placeholder="Room NO" required class="form-input" />
           <textarea id="description" placeholder="Description" required class="form-input" rows="4"></textarea>
-
-
           <input type="file" id="image" accept="image/*" class="form-input" />
           <button type="submit" class="submit-btn">Submit</button>
         </form>
@@ -57,8 +56,11 @@
             <thead>
               <tr>
                 <th>#</th>
+                <th>Student ID</th>
                 <th>Type</th>
                 <th>Subject</th>
+                <th>Block No</th>
+                <th>Room No</th>
                 <th>Description + Image</th>
                 <th>Status</th>
               </tr>

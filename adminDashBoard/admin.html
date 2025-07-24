@@ -20,101 +20,83 @@
   </div>
 
   <div class="main-content">
+
+    <!-- Pending Complaints -->
     <section id="complain">
-      <h1>Complain Page</h1>
+      <h1>Pending Complaints</h1>
       <table class="complaints-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>User</th>
+            <th>#</th>
+            <th>Student ID</th>
+            <th>Type</th>
             <th>Subject</th>
-            <th>Date</th>
+            <th>Block No</th>
+            <th>Room No</th>
+            <th>Description + Image</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="pending-complaints">
-          <tr>
-            <td>CMP2024-001</td>
-            <td>S12345</td>
-            <td>Login Authentication Failed</td>
-            <td>15-May-2024</td>
-            <td><span class="status-badge status-pending">Pending</span></td>
-            <td class="action-buttons">
-              <button class="btn btn-action btn-process" data-complaint-id="CMP2024-001">
-                <i class="fas fa-cog"></i> Process
-              </button>
-              <button class="btn btn-action btn-complete" data-complaint-id="CMP2024-001">
-                <i class="fas fa-check"></i> Complete
-              </button>
-            </td>
-          </tr>
+          <!-- Filled by JS -->
         </tbody>
       </table>
     </section>
 
+    <!-- On Process Complaints -->
     <section id="onProcess">
-      <h1>On Process Complains</h1>
+      <h1>On Process Complaints</h1>
       <table class="complaints-table">
         <thead>
           <tr>
-            <th>Complaint ID</th>
+            <th>#</th>
             <th>Student ID</th>
+            <th>Type</th>
             <th>Subject</th>
-            <th>Date</th>
+            <th>Block No</th>
+            <th>Room No</th>
+            <th>Description + Image</th>
             <th>Status</th>
-            <th class="text-center">Action</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="process-complaints">
-          <tr>
-            <td>COMP-002</td>
-            <td>Jane Smith</td>
-            <td>Payment problem</td>
-            <td>2023-05-14</td>
-            <td><span class="status-badge status-processing">Processing</span></td>
-            <td>
-              <button class="btn btn-action btn-complete" data-complaint-id="COMP-002">
-                <i class="fas fa-check"></i> Complete
-              </button>
-            </td>
-          </tr>
+          <!-- Filled by JS -->
         </tbody>
       </table>
     </section>
 
+    <!-- Completed Complaints -->
     <section id="completed">
-      <h1>Completed Complains</h1>
+      <h1>Completed Complaints</h1>
       <table class="complaints-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>User</th>
+            <th>#</th>
+            <th>Student ID</th>
+            <th>Type</th>
             <th>Subject</th>
-                <th>Date</th> <!-- This was missing in your <thead> -->
-
+            <th>Block No</th>
+            <th>Room No</th>
+            <th>Description + Image</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="completed-complaints">
-          <tr>
-            <td>COMP-003</td>
-            <td>Mike Johnson</td>
-            <td>Course access</td>
-            <td>2023-05-10</td>
-            <td><span class="status-badge status-completed">Completed</span></td>
-          </tr>
+          <!-- Filled by JS -->
         </tbody>
       </table>
     </section>
 
+    <!-- Student Registration -->
     <section id="register">
       <h1>Register Student</h1>
       <form id="registerForm">
         <div class="form-group">
           <label for="studentId">Student ID:</label>
-          <input type="text" id="studentId" pattern="[A-Za-z0-9]{6,}" 
-                 title="Must be at least 6 alphanumeric characters" required>
+          <input type="text" id="studentId" pattern="[A-Za-z0-9]{6,}" title="At least 6 characters" required>
         </div>
         <div class="form-group">
           <label for="studentEmail">Email:</label>
@@ -141,6 +123,7 @@
         </button>
       </form>
     </section>
+
   </div>
 
   <script src="/javascript/admin.js"></script>
