@@ -53,9 +53,8 @@ async function fetchStudentComplaints() {
     complaintId: c.complaintId,
     studentId: c.studentIdOnly,
     type: c.complaintType,
-    // subject: c.complaintSubject,
     subject: c.complaintSubject || c.subject || "No subject",
-    block: c.complaintBlockNumber,
+    block: c.blockNo || c.complaintBlockNUmber || c.block || "N/A",
     room: c.complaintRoomNumber,
     description: c.complaintDescription,
     status: c.complaintStatus,
@@ -96,19 +95,22 @@ function renderComplaints() {
   completed.innerHTML = "";
 
   complaints.forEach((c, index) => {
-    const row = document.createElement("tr");
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${index + 1}</td> <!-- ✅ This is the fix -->
+    <td>${c.studentId}</td>
+    <td>${c.type}</td>
+    <td>${c.subject}</td>
+    <td>${c.block || c.blockNo}</td>
+    <td>${c.room || c.roomNo}</td>
+    <td>
+      ${c.description}
+      ${c.image ? `<br><img src="${c.image}" alt="Complaint Image" width="100">` : ""}
+    </td>
+    <td>${c.status}</td>
+    ${getActionButtons(index, c.status)}
+  `;
 
-    row.innerHTML = `
-      <td>${c.studentId}</td>
-      <td>${c.type}</td>
-      <td>${c.subject}</td>
-      <td>${c.block || c.blockNo}</td>
-      <td>${c.room || c.roomNo}</td>
-      <td>${c.description}</td>
-      <td>${c.image ? `<img src="${c.image}" alt="Complaint Image" width="100">` : "No image"}</td>
-      <td>${c.status}</td>
-      ${getActionButtons(index, c.status)}
-    `;
 
     if (c.status === "Pending") {
       pending.appendChild(row);
