@@ -101,19 +101,19 @@ function updateComplaintsTable() {
   complaints.forEach((c, index) => {
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${c.studentId}</td>
-      <td>${c.type}</td>
-      <td>${c.subject}</td>
-      <td>${c.blockNo}</td>
-      <td>${c.roomNo}</td>
-      <td>
-        <p>${c.description}</p>
-         ${c.image ? `<img src="http://localhost:8080/uploads/${c.image}" alt="Complaint Image" class="desc-img" />` : ""}
-      </td>
-      <td>${c.status}</td>
-    `;
+  row.innerHTML = `
+    <td>${index + 1}</td>
+    <td>${c.studentId}</td>
+    <td>${c.type}</td>
+    <td>${c.subject}</td>
+    <td>${c.blockNo}</td>
+    <td>${c.roomNo}</td>
+    <td>
+      <p>${c.description}</p>
+      ${c.image ? `<img src="${c.image}" alt="Complaint Image" class="desc-img" />` : ""}
+    </td>
+    <td>${c.status}</td>
+  `;
 
     tbody.appendChild(row);
   });
