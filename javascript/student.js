@@ -1,9 +1,20 @@
+// 🔼 At the very top of student.js
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("studentId");
+
+// This studentId will now be accessible globally in this file
+
+
 let complaints = [];
 
 function showSection(sectionId) {
   document.getElementById('submitSection').classList.add('hidden');
   document.getElementById('viewSection').classList.add('hidden');
   document.getElementById(sectionId).classList.remove('hidden');
+
+  if (sectionId === 'viewSection') {
+    fetchStudentComplaints(); // Load complaints when viewing
+  }
 }
 
 //registers complaints
@@ -50,7 +61,39 @@ async function submitComplaint(e) {
   }
 }
 
+//fetches student complaints
+async function fetchStudentComplaints() {
+  try {
+    const response = await fetch(`http://localhost:8080/student/fetchByStudent/${studentId}`, {
+      method: 'GET',
+      credentials: 'include' // Required due to allowCredentials = true in Spring
+    });
 
+    if (!response.ok) {
+      throw new Error("Failed to fetch complaints");
+    }
+
+    const data = await response.json();
+
+    complaints = data.map(c => ({
+      studentId: c.studentId,
+      type: c.complaintType,
+      subject: c.complaintSubject,
+      blockNo: c.complaintBlockNUmber,
+      roomNo: c.complaintRoomNumber,
+      description: c.complaintDescription,
+      status: c.complaintStatus,
+      image: c.imagePath ? `http://localhost:8080/uploads/${c.imagePath}` : null
+    }));
+
+    updateComplaintsTable(); // Call your table updater function
+  } catch (err) {
+    console.error("Error fetching complaints:", err);
+  }
+}
+
+
+//displays complaints in a table
 function updateComplaintsTable() {
   const tbody = document.getElementById('complaintsTableBody');
   tbody.innerHTML = "";

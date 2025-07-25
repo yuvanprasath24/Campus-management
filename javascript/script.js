@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
       showError('All fields are required');
       return;
     }
-
+    const studentId = "23bit123"; 
     if (currentUserType === 'student' && validStudentEmails.includes(email) && password === testPassword) {
-      window.location.href = "/studentDashBoard/student.html";
+      window.location.href = `/studentDashBoard/student.html?studentId=${studentId}`;
     } else if (currentUserType === 'admin' && validAdminEmails.includes(email) && password === testPassword) {
       window.location.href = "/adminDashBoard/admin.html";
     } else if (currentUserType === 'parent' && validStudentEmails.includes(email) && password === testPassword) {
