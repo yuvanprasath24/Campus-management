@@ -49,27 +49,97 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset();
   });
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const userId = userIdField.value.trim();
+  // form.addEventListener('submit', (e) => {
+  //   e.preventDefault();
+  //   const email = document.getElementById('email').value.trim();
+  //   const password = document.getElementById('password').value;
+  //   const userId = userIdField.value.trim();
 
-    if (!email || !password || !userId) {
-      showError('All fields are required');
-      return;
-    }
-    const studentId = "23bit123"; 
-    if (currentUserType === 'student' && validStudentEmails.includes(email) && password === testPassword) {
-      window.location.href = `/studentDashBoard/student.html?studentId=${studentId}`;
-    } else if (currentUserType === 'admin' && validAdminEmails.includes(email) && password === testPassword) {
-      window.location.href = "/adminDashBoard/admin.html";
-    } else if (currentUserType === 'parent' && validStudentEmails.includes(email) && password === testPassword) {
-      window.location.href = "/parentsDashBoard/parents.html";
+  //   if (!email || !password || !userId) {
+  //     showError('All fields are required');
+  //     return;
+  //   }
+  //   const studentId = "23bit123"; 
+  //   if (currentUserType === 'student' && validStudentEmails.includes(email) && password === testPassword) {
+  //     window.location.href = `/studentDashBoard/student.html?studentId=${studentId}`;
+  //   } else if (currentUserType === 'admin' && validAdminEmails.includes(email) && password === testPassword) {
+  //     window.location.href = "/adminDashBoard/admin.html";
+  //   } else if (currentUserType === 'parent' && validStudentEmails.includes(email) && password === testPassword) {
+  //     window.location.href = `/parentsDashBoard/parents.html?studentId=${studentId}`;
+  //   } else {
+  //     showError('Invalid credentials');
+  //   }
+  // });
+
+  //login form submission
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const userId = userIdField.value.trim();
+
+  if (!email || !password || !userId) {
+    showError('All fields are required');
+    return;
+  }
+
+  // const payload = {
+  //   id: userId,
+  //   email: email,
+  //   password: password
+  // };
+
+    let payload = {};
+  if (currentUserType === "student" || currentUserType === "parent") {
+    payload = {
+      studentId: userId,
+      studentEmail: email,
+      studentPassword: password
+    };
+  } else if (currentUserType === "admin") {
+    payload = {
+      id: userId,
+      email: email,
+      password: password
+    };
+  }
+
+
+  let endpoint = "";
+  if (currentUserType === "student" || currentUserType === "parent") {
+    endpoint = "http://localhost:8080/student/studentVerify";
+  } else if (currentUserType === "admin") {
+    endpoint = "http://localhost:8080/admin/adminLoginVerify";
+  }
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.text(); // backend returns int (0 or 1)
+
+    if (result === "1") {
+      // ✅ Redirect based on role
+      if (currentUserType === 'student') {
+        window.location.href = `/studentDashBoard/student.html?studentId=${userId}`;
+      } else if (currentUserType === 'admin') {
+        window.location.href = "/adminDashBoard/admin.html";
+      } else if (currentUserType === 'parent') {
+        window.location.href = `/parentsDashBoard/parents.html?studentId=${userId}`;
+      }
     } else {
-      showError('Invalid credentials');
+      showError("Invalid credentials");
     }
-  });
+
+  } catch (err) {
+    console.error("Login error:", err);
+    showError("Login failed. Please try again.");
+  }
+});
+
 
   function showLogin(bgClass, hoverClass) {
     selectionScreen.classList.add('hidden');

@@ -76,14 +76,14 @@ async function fetchStudentComplaints() {
     const data = await response.json();
 
     complaints = data.map(c => ({
-      studentId: c.studentId,
+      studentId: c.studentIdOnly,
       type: c.complaintType,
       subject: c.complaintSubject,
       blockNo: c.complaintBlockNUmber,
       roomNo: c.complaintRoomNumber,
       description: c.complaintDescription,
       status: c.complaintStatus,
-      image: c.imagePath ? `http://localhost:8080/uploads/${c.imagePath}` : null
+      image: c.complaintImageUrl ? `http://localhost:8080/uploads/${c.complaintImageUrl}` : null
     }));
 
     updateComplaintsTable(); // Call your table updater function
@@ -110,7 +110,7 @@ function updateComplaintsTable() {
       <td>${c.roomNo}</td>
       <td>
         <p>${c.description}</p>
-         ${c.image ? `<img src="${c.image}" alt="Complaint Image" class="desc-img" />` : ""}
+         ${c.image ? `<img src="http://localhost:8080/uploads/${c.image}" alt="Complaint Image" class="desc-img" />` : ""}
       </td>
       <td>${c.status}</td>
     `;
